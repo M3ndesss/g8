@@ -22,4 +22,12 @@ public class MedicoTest {
     public void deveCriarMedicoComConstrutorVazio() {
         assertDoesNotThrow(() -> new Medico());
     }
+
+    @Test
+    public void deveExporFaltaDeValidacaoParaCamposVazios() {
+        Medico medico = new Medico("Dr. Fulano", "111.111.111-11", "", "");
+        // BUG: O sistema permite criar um médico sem especialidade e sem senha, por exemplo.
+        assertEquals("", medico.getEspecialidade(), "BUG DE SENTIDO: Aceita especialidade vazia.");
+        assertEquals("", medico.getSenha(), "BUG DE SENTIDO: Aceita senha vazia.");
+    }
 }
