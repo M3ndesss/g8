@@ -1,4 +1,13 @@
-# Back-end: Sistema de Agendamento Médico
+# Back-end: Sistema de Agendamento Médico (Grupo 8)
+
+## Membros da Equipe e Papéis
+
+* **Alberto de Rezende Carneiro Tomaz** - Gerência de projeto e líder técnico.
+* **Gabriel Rodrigues Fonseca** - Desenvolvedor backend.
+* **Gabriel Mendes Araújo** - Desenvolvedor frontend.
+* **Mateus Augusto Guimarães** - Engenheiro de QA/testes.
+* **Isabela Ribeiro Campos** - Engenheira de software (documentação).
+
 
 Este documento apresenta a proposta inicial de arquitetura, decisões de projeto e a estrutura base desenvolvida para o sistema de agendamento médico em Java.
 
