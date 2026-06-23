@@ -23,16 +23,13 @@ public class ClienteRepository {
         ClienteRepository.database = database;
         try {
             dao = DaoManager.createDao(database.getConnection(), Cliente.class);
-            
             TableUtils.createTableIfNotExists(database.getConnection(), Cliente.class);
-        }
-        catch(SQLException e) {
-            System.out.println("Erro ao inicializar o DAO de Cliente: " + e);
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
         }            
     }
     
-    
-    public Cliente create(Cliente cliente) {
+    public Cliente create(Cliente cliente) throws SQLException {
         int nrows = 0;
         try {
             nrows = dao.create(cliente);
@@ -41,49 +38,54 @@ public class ClienteRepository {
             }
             this.loadedCliente = cliente;
             this.loadedClientes.add(cliente);
+            return cliente;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao criar cliente: " + e.getMessage());
+            throw e;
         }
-        return cliente;
     }    
 
-    public Cliente loadFromId(int id) {
+    public Cliente loadFromId(int id) throws SQLException {
         try {
             this.loadedCliente = dao.queryForId(id);
             if (this.loadedCliente != null) {
                 this.loadedClientes.add(this.loadedCliente);
             }
+            return this.loadedCliente;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao buscar cliente por ID: " + e.getMessage());
+            throw e;
         }
-        return this.loadedCliente;
     }    
     
-    public List<Cliente> loadAll() {
+    public List<Cliente> loadAll() throws SQLException {
         try {
             this.loadedClientes = dao.queryForAll();
             if (this.loadedClientes.size() != 0) {
                 this.loadedCliente = this.loadedClientes.get(0);
             }
+            return this.loadedClientes;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao listar todos os clientes: " + e.getMessage());
+            throw e;
         }
-        return this.loadedClientes;
     }
 
-    public void update(Cliente cliente) {
+    public void update(Cliente cliente) throws SQLException {
         try {
             dao.update(cliente);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao atualizar cliente: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void delete(Cliente cliente) {
+    public void delete(Cliente cliente) throws SQLException {
         try {
             dao.delete(cliente);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao deletar cliente: " + e.getMessage());
+            throw e;
         }
     }      
 }
