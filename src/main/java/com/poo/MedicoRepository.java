@@ -24,13 +24,14 @@ public class MedicoRepository {
         try {
             dao = DaoManager.createDao(database.getConnection(), Medico.class);
             TableUtils.createTableIfNotExists(database.getConnection(), Medico.class);
-        }
-        catch(SQLException e) {
-            System.out.println("Erro ao inicializar o DAO de Medico: " + e);
+        } catch(SQLException e) {
+            
+            throw new RuntimeException("Erro fatal ao inicializar o DAO de Medico", e);
         }            
     }
     
-    public Medico create(Medico medico) {
+    
+    public Medico create(Medico medico) throws SQLException {
         try {
             int nrows = dao.create(medico);
             if (nrows == 0) {
@@ -38,49 +39,54 @@ public class MedicoRepository {
             }
             this.loadedMedico = medico;
             this.loadedMedicos.add(medico);
+            return medico;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao criar médico: " + e.getMessage());
+            throw e; 
         }
-        return medico;
     }    
 
-    public Medico loadFromId(int id) {
+    public Medico loadFromId(int id) throws SQLException {
         try {
             this.loadedMedico = dao.queryForId(id);
             if (this.loadedMedico != null) {
                 this.loadedMedicos.add(this.loadedMedico);
             }
+            return this.loadedMedico;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao buscar médico por ID: " + e.getMessage());
+            throw e;
         }
-        return this.loadedMedico;
     }    
     
-    public List<Medico> loadAll() {
+    public List<Medico> loadAll() throws SQLException {
         try {
             this.loadedMedicos = dao.queryForAll();
             if (this.loadedMedicos.size() != 0) {
                 this.loadedMedico = this.loadedMedicos.get(0);
             }
+            return this.loadedMedicos;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao listar todos os médicos: " + e.getMessage());
+            throw e;
         }
-        return this.loadedMedicos;
     }
     
-    public void update(Medico medico) {
+    public void update(Medico medico) throws SQLException {
         try {
             dao.update(medico);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao atualizar médico: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void delete(Medico medico) {
+    public void delete(Medico medico) throws SQLException {
         try {
             dao.delete(medico);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao deletar médico: " + e.getMessage());
+            throw e;
         }
     } 
 }
