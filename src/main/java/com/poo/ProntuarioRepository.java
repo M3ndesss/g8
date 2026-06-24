@@ -26,55 +26,56 @@ public class ProntuarioRepository {
             
             ponteDao = DaoManager.createDao(database.getConnection(), ProntuarioMedico.class);
             TableUtils.createTableIfNotExists(database.getConnection(), ProntuarioMedico.class);
-        }
-        catch(SQLException e) {
-            System.out.println("Erro ao inicializar o repositório de Prontuário: " + e);
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
         }            
     }
     
-    public Prontuario create(Prontuario prontuario) {
+    public Prontuario create(Prontuario prontuario) throws SQLException {
         try {
             prontuarioDao.create(prontuario);
             this.loadedProntuarios.add(prontuario);
+            return prontuario;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao criar prontuário: " + e.getMessage());
+            throw e;
         }
-        return prontuario;
     }    
 
-    // Método para salvar um médico no histórico do prontuário no banco de dados
-    public void adicionarMedicoAoHistorico(Prontuario prontuario, Medico medico) {
+    public void adicionarMedicoAoHistorico(Prontuario prontuario, Medico medico) throws SQLException {
         try {
             ProntuarioMedico ligacao = new ProntuarioMedico(prontuario, medico);
             ponteDao.create(ligacao);
-            System.out.println("Médico adicionado ao histórico do prontuário no banco!");
         } catch (SQLException e) {
-            System.out.println("Erro ao vincular médico ao prontuário: " + e);
+            System.err.println("Erro ao vincular médico ao prontuário: " + e.getMessage());
+            throw e;
         }
     }
 
-    public Prontuario loadFromId(int id) {
+    public Prontuario loadFromId(int id) throws SQLException {
         try {
             return prontuarioDao.queryForId(id);
         } catch (SQLException e) {
-            System.out.println(e);
-            return null;
+            System.err.println("Erro ao buscar prontuário por ID: " + e.getMessage());
+            throw e;
         }
     }
     
-    public void update(Prontuario prontuario) {
+    public void update(Prontuario prontuario) throws SQLException {
         try {
             prontuarioDao.update(prontuario);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao atualizar prontuário: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void delete(Prontuario prontuario) {
+    public void delete(Prontuario prontuario) throws SQLException {
         try {
             prontuarioDao.delete(prontuario);
         } catch (SQLException e) {
-            System.out.println(e);
+            System.err.println("Erro ao deletar prontuário: " + e.getMessage());
+            throw e;
         }
     } 
 }

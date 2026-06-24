@@ -24,13 +24,13 @@ public class SecretariaRepository {
         try {
             dao = DaoManager.createDao(database.getConnection(), Secretaria.class);
             TableUtils.createTableIfNotExists(database.getConnection(), Secretaria.class);
-        }
-        catch(SQLException e) {
-            System.out.println("Erro ao inicializar o banco de Secretárias: " + e);
+        } catch(SQLException e) {
+            
+            throw new RuntimeException("Erro fatal ao inicializar o DAO de Secretaria", e);
         }            
     }
     
-    public Secretaria create(Secretaria secretaria) {
+    public Secretaria create(Secretaria secretaria) throws SQLException {
         try {
             int nrows = dao.create(secretaria);
             if (nrows == 0) {
@@ -38,33 +38,36 @@ public class SecretariaRepository {
             }
             this.loadedSecretaria = secretaria;
             this.loadedSecretarias.add(secretaria);
+            return secretaria;
         } catch (SQLException e) {
-            System.out.println("Erro ao salvar secretária: " + e);
+            System.err.println("Erro ao salvar secretária: " + e.getMessage());
+            throw e; 
         }
-        return secretaria;
     }    
 
-    public Secretaria loadFromId(int id) {
+    public Secretaria loadFromId(int id) throws SQLException {
         try {
             this.loadedSecretaria = dao.queryForId(id);
             if (this.loadedSecretaria != null) {
                 this.loadedSecretarias.add(this.loadedSecretaria);
             }
+            return this.loadedSecretaria;
         } catch (SQLException e) {
-            System.out.println("Erro ao buscar id " + id + " em Secretárias: " + e);
+            System.err.println("Erro ao buscar id " + id + " em Secretárias: " + e.getMessage());
+            throw e; 
         }
-        return this.loadedSecretaria;
     }    
     
-    public List<Secretaria> loadAll() {
+    public List<Secretaria> loadAll() throws SQLException {
         try {
             this.loadedSecretarias = dao.queryForAll();
             if (this.loadedSecretarias.size() != 0) {
                 this.loadedSecretaria = this.loadedSecretarias.get(0);
             }
+            return this.loadedSecretarias;
         } catch (SQLException e) {
-            System.out.println("Erro ao listar todas as secretárias: " + e);
+            System.err.println("Erro ao listar todas as secretárias: " + e.getMessage());
+            throw e; 
         }
-        return this.loadedSecretarias;
     }
 }

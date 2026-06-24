@@ -24,13 +24,12 @@ public class ConsultaRepository {
         try {
             dao = DaoManager.createDao(database.getConnection(), Consulta.class);
             TableUtils.createTableIfNotExists(database.getConnection(), Consulta.class);
-        }
-        catch(SQLException e) {
-            System.out.println("Erro ao inicializar o banco de Consultas: " + e);
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
         }            
     }
     
-    public Consulta create(Consulta consulta) {
+    public Consulta create(Consulta consulta) throws SQLException {
         try {
             int nrows = dao.create(consulta);
             if (nrows == 0) {
@@ -38,51 +37,54 @@ public class ConsultaRepository {
             }
             this.loadedConsulta = consulta;
             this.loadedConsultas.add(consulta);
+            return consulta;
         } catch (SQLException e) {
-            System.out.println("Erro ao salvar consulta: " + e);
+            System.err.println("Erro ao salvar consulta: " + e.getMessage());
+            throw e;
         }
-        return consulta;
     }    
 
-    public Consulta loadFromId(int id) {
+    public Consulta loadFromId(int id) throws SQLException {
         try {
             this.loadedConsulta = dao.queryForId(id);
             if (this.loadedConsulta != null) {
                 this.loadedConsultas.add(this.loadedConsulta);
             }
+            return this.loadedConsulta;
         } catch (SQLException e) {
-            System.out.println("Erro ao carregar consulta por ID: " + e);
+            System.err.println("Erro ao carregar consulta por ID: " + e.getMessage());
+            throw e;
         }
-        return this.loadedConsulta;
     }    
     
-    public List<Consulta> loadAll() {
+    public List<Consulta> loadAll() throws SQLException {
         try {
             this.loadedConsultas = dao.queryForAll();
             if (this.loadedConsultas.size() != 0) {
                 this.loadedConsulta = this.loadedConsultas.get(0);
             }
+            return this.loadedConsultas;
         } catch (SQLException e) {
-            System.out.println("Erro ao listar todas as consultas: " + e);
+            System.err.println("Erro ao listar todas as consultas: " + e.getMessage());
+            throw e;
         }
-        return this.loadedConsultas;
     }
 
-    public void update(Consulta consulta) {
+    public void update(Consulta consulta) throws SQLException {
         try {
             dao.update(consulta);
-            System.out.println("Consulta reagendada/atualizada com sucesso no banco!");
         } catch (SQLException e) {
-            System.out.println("Erro ao atualizar dados da consulta: " + e);
+            System.err.println("Erro ao atualizar dados da consulta: " + e.getMessage());
+            throw e;
         }
     }
 
-    public void delete(Consulta consulta) {
+    public void delete(Consulta consulta) throws SQLException {
         try {
             dao.delete(consulta);
-            System.out.println("Consulta cancelada e removida do banco de dados.");
         } catch (SQLException e) {
-            System.out.println("Erro ao deletar consulta: " + e);
+            System.err.println("Erro ao deletar consulta: " + e.getMessage());
+            throw e;
         }
     }      
 }
