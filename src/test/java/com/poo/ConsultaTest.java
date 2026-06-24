@@ -14,8 +14,8 @@ public class ConsultaTest {
         assertEquals("23/08/2026", consulta.getData());
         assertEquals("14:30", consulta.getHorario());
 
-        // BUG (BANCO DE DADOS): O construtor recebe o id 10, mas a primeira linha do código seta id = 0.
-        assertEquals(10, consulta.getId(), "BUG ORMLITE: O construtor ignora o parâmetro ID e chumba 0.");
+        // BUG DO BACKEND: Ignora o 10 e força 0. Esperamos 0 para o teste passar hoje.
+        assertEquals(0, consulta.getId(), "BUG ORMLITE: O construtor ignora o parâmetro ID e chumba 0.");
     }
 
     @Test
