@@ -6,13 +6,13 @@ Repositório do Grupo 8 da disciplina de **Programação Orientada a Objetos (20
 
 ## 👥 Membros da Equipe
 
-| Nome | Função |
-|---|---|---|
-| Alberto Tomaz | Líder do Projeto |
-| Gabriel Fonseca | Backend |
-| Gabriel Mendes | Frontend |
-| Mateus Augusto | Testes |
-| Isabela Campos | Documentação |
+Nome | Função
+--- | ---
+Alberto Tomaz | Líder do Projeto
+Gabriel Fonseca | Backend
+Gabriel Mendes | Frontend
+Mateus Augusto | Testes
+Isabela Campos | Documentação
 
 ---
 
@@ -28,7 +28,7 @@ Um dos integrantes do grupo possui um familiar que trabalha em uma clínica psiq
 
 ### Motivação
 
-A proposta deste projeto é desenvolver um sistema de agendamento médico e gestão de prontuários eletrônicos utilizando os princípios da Programação Orientada a Objetos. O objetivo é oferecer uma solução acessível, modular e confiável para clínicas, com foco em saúde mental, que facilite o dia a dia de médicos, secretárias e pacientes.
+A proposta deste projeto é desenvolver um sistema de agendamento médico e gestão de prontuários eletrônicos utilizando os princípios da Programação Orientada a Objetos. O objetivo é oferecer uma solução acessível, modular e confiável para clínicas — com foco em saúde mental — que facilite o dia a dia de médicos, secretárias e pacientes.
 
 ---
 
@@ -51,13 +51,13 @@ Desenvolver um sistema back-end em Java para agendamento de consultas médicas e
 
 ## Seção 3 — Divisão de Tarefas
 
-| Membro | Responsabilidades |
-|---|---|
-| Alberto Tomaz | Coordenação geral, integração dos módulos, revisão de arquitetura |
-| Gabriel Fonseca | Implementação das classes de modelo, repositórios e lógica de negócio |
-| Gabriel Mendes | Desenvolvimento da interface do usuário (frontend/JavaFX) |
-| Mateus Augusto | Plano de testes, casos de teste e validação das funcionalidades |
-| Isabela Campos | Documentação, diagramas UML, README e relatórios |
+Nome | Responsabilidades
+--- | ---
+Alberto Tomaz | Coordenação geral, integração dos módulos e revisão de arquitetura
+Gabriel Fonseca | Implementação das classes de modelo, repositórios e lógica de negócio
+Gabriel Mendes | Desenvolvimento da interface do usuário (JavaFX)
+Mateus Augusto | Plano de testes, casos de teste e validação das funcionalidades
+Isabela Campos | Documentação, diagramas UML, README e relatórios
 
 ---
 
@@ -65,160 +65,7 @@ Desenvolver um sistema back-end em Java para agendamento de consultas médicas e
 
 ### 4.1 Diagrama de Classes
 
-```plantuml
-@startuml
-
-skinparam monochrome true
-skinparam classAttributeIconSize 0
-
-abstract class Usuario {
-  - id: int
-  - nome: String
-  - cpf: String
-  - telefone: String
-  + getId(): int
-  + getNome(): String
-  + getCpf(): String
-  + getTelefone(): String
-  + setNome(nome: String): void
-  + setTelefone(tel: String): void
-}
-
-class Cliente {
-  - prontuario: Prontuario
-  + getProntuario(): Prontuario
-  + setProntuario(p: Prontuario): void
-}
-
-class Medico {
-  - especialidade: String
-  - senha: String
-  + getEspecialidade(): String
-  + getSenha(): String
-  + setSenha(senha: String): void
-  + autenticar(senha: String): boolean
-}
-
-class Secretaria {
-  - senha: String
-  + getSenha(): String
-  + setSenha(senha: String): void
-  + autenticar(senha: String): boolean
-}
-
-class Prontuario {
-  - id: int
-  - cliente: Cliente
-  - historico: Collection<ProntuarioMedico>
-  + getId(): int
-  + getCliente(): Cliente
-  + getHistorico(): Collection<ProntuarioMedico>
-}
-
-class ProntuarioMedico {
-  - id: int
-  - prontuario: Prontuario
-  - medico: Medico
-  - dataRegistro: String
-  - anotacoes: String
-  + getId(): int
-  + getProntuario(): Prontuario
-  + getMedico(): Medico
-  + getAnotacoes(): String
-  + setAnotacoes(a: String): void
-}
-
-class Consulta {
-  - id: int
-  - data: String
-  - horario: String
-  - medico: Medico
-  - cliente: Cliente
-  - status: String
-  + getId(): int
-  + getData(): String
-  + getHorario(): String
-  + getMedico(): Medico
-  + getCliente(): Cliente
-  + getStatus(): String
-  + setStatus(status: String): void
-}
-
-class Database {
-  - databaseName: String
-  - connection: JdbcConnectionSource
-  + getConnection(): JdbcConnectionSource
-  + close(): void
-}
-
-class ClienteRepository {
-  - dao: Dao<Cliente, Integer>
-  + create(c: Cliente): Cliente
-  + update(c: Cliente): void
-  + delete(c: Cliente): void
-  + loadFromId(id: int): Cliente
-  + loadAll(): List<Cliente>
-}
-
-class MedicoRepository {
-  - dao: Dao<Medico, Integer>
-  + create(m: Medico): Medico
-  + update(m: Medico): void
-  + delete(m: Medico): void
-  + loadFromId(id: int): Medico
-  + loadAll(): List<Medico>
-  + buscarPorSenha(cpf: String, senha: String): Medico
-}
-
-class SecretariaRepository {
-  - dao: Dao<Secretaria, Integer>
-  + create(s: Secretaria): Secretaria
-  + update(s: Secretaria): void
-  + delete(s: Secretaria): void
-  + loadFromId(id: int): Secretaria
-  + buscarPorSenha(cpf: String, senha: String): Secretaria
-}
-
-class ProntuarioRepository {
-  - dao: Dao<Prontuario, Integer>
-  + create(p: Prontuario): Prontuario
-  + update(p: Prontuario): void
-  + loadFromCliente(cliente: Cliente): Prontuario
-  + loadAll(): List<Prontuario>
-}
-
-class ConsultaRepository {
-  - dao: Dao<Consulta, Integer>
-  + create(c: Consulta): Consulta
-  + update(c: Consulta): void
-  + delete(c: Consulta): void
-  + loadFromId(id: int): Consulta
-  + loadByMedico(medico: Medico): List<Consulta>
-  + loadByCliente(cliente: Cliente): List<Consulta>
-  + verificarConflito(medico: Medico, data: String, horario: String): boolean
-}
-
-' Herança
-Cliente --|> Usuario
-Medico --|> Usuario
-Secretaria --|> Usuario
-
-' Associações
-Cliente "1" --> "1" Prontuario
-Prontuario "1" --> "0..*" ProntuarioMedico
-ProntuarioMedico "0..*" --> "1" Medico
-Consulta "0..*" --> "1" Medico
-Consulta "0..*" --> "1" Cliente
-
-' Repositórios
-ClienteRepository --> Database
-MedicoRepository --> Database
-SecretariaRepository --> Database
-ProntuarioRepository --> Database
-ConsultaRepository --> Database
-
-@enduml
-```
+![Diagrama de Classes](https://www.plantuml.com/plantuml/png/fLLDZzCm4BtdLrWzBQ2koW4E4QfsLP1saLWX2ZzWOazRQrDFP4yuyF7VSHmxSP8M2N5gyjxu-StuERrp39RRSrsuPsqQi70MPp8aJvREADYsc36o1kVkcQskMiP7IMQlVw3OP2M653fin9iSj62UE_3jfYYWScn1SYyclhaMh2Rnin1YBRGgXJOSdeqtK8gztymS0o2Rm-ITiSO3cRpebJWYFwgR5qac04zUgOEcPRlci0I_HiqPuw98xibNV2Uj4Z-izBRc9R-BekzsLsiqZB7RnfBXq7ufFW_FoSg8T6Pcl9lmJSulDls4IiiqONGDIWsrLg2cutLeJZ2VnuUyV3ckVRTc1eEFXc4jmTvC97rLHLGZcD7Q7gL5dq0DqTv54_-xopYR2p6J_P6KwMm2UDAEoVgfUPZg6YLhCkz6dNwaswk9YreTEie6vY4f1-vlsXViJquoR-9gajRY7DQKCGK1Ki3m1O_UYQL91C0GWoHqynEuJyJoNemKN8yz6TVM31USTruc7ava-pxoQ39mkp3rtYzTHlAXNtyXgq5asK34ftiiMkWsgy2bgwlYwnFCFr9aJ7-afVYeAhaRtlVKMZdaOCGxHrShPKqkn2YvOVABJsY3Z_GvMQz_RTENrCCn9ZCqksiJneicdTNhbUUsuJUBKNP_XehDxUtBrIAQnIAhiJ2fnh8X4Fz6fxjKtA5H_a_h3m)
 
 ---
 
@@ -226,180 +73,31 @@ ConsultaRepository --> Database
 
 #### Fazer Login (Médico)
 
-```plantuml
-@startuml
-
-actor Medico
-
-participant "TelaLogin" as UI
-participant "MedicoRepository" as Repo
-participant "Database" as DB
-
-Medico -> UI: informa CPF e senha
-activate UI
-UI -> Repo: buscarPorSenha(cpf, senha)
-activate Repo
-Repo -> DB: getConnection()
-activate DB
-DB --> Repo: JdbcConnectionSource
-deactivate DB
-Repo --> UI: Medico (se encontrado) / null
-deactivate Repo
-alt autenticado
-  UI --> Medico: exibe dashboard do médico
-else falha
-  UI --> Medico: exibe mensagem de erro
-end
-deactivate UI
-
-@enduml
-```
+![Diagrama de Sequência - Login](https://www.plantuml.com/plantuml/png/TP5DQWCn38NtFeN8AeM6xcTHmcGefBGGakO06bkJ61nhy4zeRrzv79h9eXk3hUyzFSdhc32aV74ATU80dsIiPZNAezLsH9zWyKKEF_Xa_G8mmd7xMAsAFOqShJZyJ52vFc8T9kmnqbJkMgMg3bQlujY0zGE72y9czmO4aVmPIo9xnKIbvN5Ro6BRG9-Znh3ZS2ZOKe_3SrKytILJW78KMTSsSAAqOUz90FRB6IbPkXPMV-xlfjTtyi0vQ5A6vdprlIM_pV42FZit1wS8w19WJkHb4sXO0PH9H5fb3T2txGaCndFF68mY5ma6T3B_Foo5m8gycVUI3QtbIVxn5m)
 
 ---
 
 #### Agendar Consulta (Secretaria)
 
-```plantuml
-@startuml
-
-actor Secretaria
-
-participant "TelaAgendamento" as UI
-participant "ConsultaRepository" as ConsultaRepo
-participant "MedicoRepository" as MedicoRepo
-participant "ClienteRepository" as ClienteRepo
-participant "Database" as DB
-
-Secretaria -> UI: seleciona médico, cliente, data e horário
-activate UI
-UI -> MedicoRepo: loadFromId(medicoId)
-activate MedicoRepo
-MedicoRepo -> DB: getConnection()
-DB --> MedicoRepo: JdbcConnectionSource
-MedicoRepo --> UI: Medico
-deactivate MedicoRepo
-UI -> ClienteRepo: loadFromId(clienteId)
-activate ClienteRepo
-ClienteRepo -> DB: getConnection()
-DB --> ClienteRepo: JdbcConnectionSource
-ClienteRepo --> UI: Cliente
-deactivate ClienteRepo
-UI -> ConsultaRepo: verificarConflito(medico, data, horario)
-activate ConsultaRepo
-ConsultaRepo --> UI: false (sem conflito)
-deactivate ConsultaRepo
-UI -> ConsultaRepo: create(Consulta)
-activate ConsultaRepo
-ConsultaRepo -> DB: getConnection()
-DB --> ConsultaRepo: JdbcConnectionSource
-ConsultaRepo --> UI: Consulta salva
-deactivate ConsultaRepo
-UI --> Secretaria: confirmação de agendamento
-deactivate UI
-
-@enduml
-```
+![Diagrama de Sequência - Agendar Consulta](https://www.plantuml.com/plantuml/png/bLFDQiCm3BxdAKHFAQGla4Ff60nos6LR7q3OocQmus2xWRrzbRzQ2MMmc_DPtuyavn8JXdHpja2LV81FKe4OCbZqV66KwR5BSFWYYo_Vr6bqr2L_08nmRROrhxwBDvlmWteV3QlzJcKItXBUIHlbT-KPtAbRmywq5yzeKUJmS3fpl1eYMLB6TmXkagr0pOGAD2O4WXyVcE37zis0YSQkhit8pq5gi1xrM_2kqUKirEXZfeZ8-GYd9SCC5PgUrSzMeekDrn9sOoOx5kU7tO99FqbP3CLEQXWecDOe30otbeTRhjCQXrIjCv8Xv4xbnoD6YpOIb94Sg4NrkCaa5Pw5ubLoNRc2_p9VGOXe1_pJbXdvsTHJLXCSAlIW2J0_UQd2R-J25_pRt04)
 
 ---
 
-#### Acessar Prontuário
+#### Acessar Prontuário (Médico)
 
-```plantuml
-@startuml
-
-actor Medico
-
-participant "TelaProntuario" as UI
-participant "ProntuarioRepository" as PronRepo
-participant "Database" as DB
-
-Medico -> UI: busca paciente pelo nome/CPF
-activate UI
-UI -> PronRepo: loadFromCliente(cliente)
-activate PronRepo
-PronRepo -> DB: getConnection()
-activate DB
-DB --> PronRepo: JdbcConnectionSource
-deactivate DB
-PronRepo --> UI: Prontuario (com historico)
-deactivate PronRepo
-UI --> Medico: exibe prontuário e histórico de atendimentos
-deactivate UI
-
-@enduml
-```
+![Diagrama de Sequência - Prontuário](https://www.plantuml.com/plantuml/png/RP71QiCm44Jl-eebf-GGUlUX1Di4KYY4Dlc0jRIq0bih9BcqVv-LdKGsz6IncZSx6XzYmf36eLUe4mTu9sCrAoz3gwr7bs1peHxFWLqQCLZU04QudjQISlr1dgCLgxz9c2_oQ2rlCM67aIP9MoirhuNzgpXNq8rH8tZKbbmYy9BByK0lpVcOOzeVbAb4k9uoyLXHGSzeZe67ff_0hPw_km8zupmEsQ2jA_YYrB1p949ssmKXwTeQzgizRwRJHVt9Oz2a32sPudz_Ksa8D0_mRQDqbAjUSCzq-M72pQrKGB-sangA0_tFIoK7SaR-vWq)
 
 ---
 
-#### Cadastrar Cliente (Paciente)
+#### Cadastrar Paciente (Secretaria)
 
-```plantuml
-@startuml
-
-actor Secretaria
-
-participant "TelaCadastro" as UI
-participant "ClienteRepository" as ClienteRepo
-participant "ProntuarioRepository" as PronRepo
-participant "Database" as DB
-
-Secretaria -> UI: preenche nome, CPF, telefone
-activate UI
-UI -> ClienteRepo: create(Cliente)
-activate ClienteRepo
-ClienteRepo -> DB: getConnection()
-DB --> ClienteRepo: JdbcConnectionSource
-ClienteRepo --> UI: Cliente salvo
-deactivate ClienteRepo
-UI -> PronRepo: create(Prontuario)
-activate PronRepo
-PronRepo -> DB: getConnection()
-DB --> PronRepo: JdbcConnectionSource
-PronRepo --> UI: Prontuario criado e vinculado
-deactivate PronRepo
-UI --> Secretaria: confirmação de cadastro
-deactivate UI
-
-@enduml
-```
+![Diagrama de Sequência - Cadastro](https://www.plantuml.com/plantuml/png/RP51QWCn34NtSmgHLGl91R88WO52Tg5f3Y1iXGeyqc1x1dhxoEbax9JkXFI_tfTzJ1bZdeRGeSiQuK8kahKOkz46x7X4oR3vee0zUamvwWOmmVNqAkW3asJwf54JswQVXwhflihFKILFnj4_ZZ9uoBiQ1NO7u-rXZ4JYlWb41zf2V_xOGgP0DnKg-Nd6J2NPzLGi3NmFjik6RqlllShRY4qDkmMwz21XcBNpzA_n5_ZCljBgbGrmlV1PhAWgjmMCNe5WPd5JiBf5hoiAryprgGojSkCue4C5J-2MJsljza974c-_VWS)
 
 ---
 
 ### 4.3 Diagrama de Casos de Uso
 
-```plantuml
-@startuml
-
-actor Secretaria
-actor Medico
-actor Cliente
-
-rectangle "Sistema de Agendamento Médico" {
-  usecase "Fazer Login" as UC1
-  usecase "Cadastrar Paciente" as UC2
-  usecase "Agendar Consulta" as UC3
-  usecase "Cancelar Consulta" as UC4
-  usecase "Visualizar Agenda" as UC5
-  usecase "Acessar Prontuário" as UC6
-  usecase "Registrar Atendimento" as UC7
-  usecase "Visualizar Histórico" as UC8
-}
-
-Secretaria --> UC1
-Secretaria --> UC2
-Secretaria --> UC3
-Secretaria --> UC4
-Secretaria --> UC5
-
-Medico --> UC1
-Medico --> UC5
-Medico --> UC6
-Medico --> UC7
-
-Cliente --> UC8
-
-@enduml
-```
+![Diagrama de Casos de Uso](https://www.plantuml.com/plantuml/png/TP9DQyCm38Rl-XKYznxMxzDe2OmTMXWhsrquMYfmRB3bIyV--zp4RCd2ZdhrwCElV8XAGLDdmVA7edeCqbuL6mbiLBm3Cke3NjW4pgXG4SxSYF4bgAsmKmQu5v5hBMDraQZS4JQCnvPTGrr6VAchy1CGKsH3CRDFTEE09z-Agv0YljKFutHD3KKD5F25J3-fKCinDKp9otWNarKgp6hQoHcsSsWzXjub9h9oozZGiq2RoJJ3CTut2jvfoiRuGct7r2ktCcn-rDn9UWyAkFjdvdEkyA4tgUVsy0Nmwpyk5e-zGJDfEPTMSsazbpOmNEMdzIJyazrEmnsKuvTu3uVyqFoXlW4)
 
 ---
 
@@ -407,85 +105,85 @@ Cliente --> UC8
 
 #### Fazer Login
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | fazerLogin |
-| **Atores** | Médico, Secretaria |
-| **Descrição** | O usuário acessa o sistema informando CPF e senha. |
-| **Pré-condições** | O usuário possui cadastro ativo no sistema. |
-| **Pós-condições** | O usuário é autenticado e redirecionado ao seu dashboard. |
-| **Fluxo Principal** | 1. O usuário informa CPF e senha. 2. O sistema consulta o repositório correspondente. 3. As credenciais são validadas. 4. O sistema exibe o dashboard do usuário. |
-| **Alternativas** | 3a. Se as credenciais forem inválidas, o sistema exibe mensagem de erro e solicita nova tentativa. |
+Campo | Descrição
+--- | ---
+**Nome** | fazerLogin
+**Atores** | Médico, Secretaria
+**Descrição** | O usuário acessa o sistema informando CPF e senha.
+**Pré-condições** | O usuário possui cadastro ativo no sistema.
+**Pós-condições** | O usuário é autenticado e redirecionado ao seu dashboard.
+**Fluxo Principal** | 1. O usuário informa CPF e senha. 2. O sistema consulta o repositório correspondente. 3. As credenciais são validadas. 4. O sistema exibe o dashboard do usuário.
+**Alternativas** | 3a. Se as credenciais forem inválidas, o sistema exibe mensagem de erro e solicita nova tentativa.
 
 ---
 
 #### Cadastrar Paciente
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | cadastrarPaciente |
-| **Ator** | Secretaria |
-| **Descrição** | A secretaria cadastra um novo paciente no sistema e um prontuário é criado automaticamente. |
-| **Pré-condições** | A secretaria está autenticada. |
-| **Pós-condições** | O paciente é salvo no banco e um prontuário vazio é vinculado a ele. |
-| **Fluxo Principal** | 1. A secretaria preenche nome, CPF e telefone. 2. O sistema valida os dados. 3. Um registro de `Cliente` é criado. 4. Um `Prontuario` é automaticamente criado e vinculado ao cliente. 5. O sistema confirma o cadastro. |
-| **Alternativas** | 2a. Se o CPF já estiver cadastrado, o sistema informa o conflito e cancela a operação. |
+Campo | Descrição
+--- | ---
+**Nome** | cadastrarPaciente
+**Ator** | Secretaria
+**Descrição** | A secretaria cadastra um novo paciente no sistema e um prontuário é criado automaticamente.
+**Pré-condições** | A secretaria está autenticada.
+**Pós-condições** | O paciente é salvo no banco e um prontuário vazio é vinculado a ele.
+**Fluxo Principal** | 1. A secretaria preenche nome, CPF e telefone. 2. O sistema valida os dados. 3. Um registro de `Cliente` é criado. 4. Um `Prontuario` é automaticamente criado e vinculado ao cliente. 5. O sistema confirma o cadastro.
+**Alternativas** | 2a. Se o CPF já estiver cadastrado, o sistema informa o conflito e cancela a operação.
 
 ---
 
 #### Agendar Consulta
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | agendarConsulta |
-| **Ator** | Secretaria |
-| **Descrição** | A secretaria agenda uma consulta vinculando médico, paciente, data e horário. |
-| **Pré-condições** | A secretaria está autenticada; médico e paciente existem no sistema. |
-| **Pós-condições** | A consulta é salva com status "Agendada". |
-| **Fluxo Principal** | 1. A secretaria seleciona o médico, o paciente, a data e o horário. 2. O sistema verifica conflito de horário para o médico. 3. Não havendo conflito, a consulta é criada e salva. 4. O sistema confirma o agendamento. |
-| **Alternativas** | 2a. Se houver conflito de horário, o sistema informa e solicita novo horário. |
+Campo | Descrição
+--- | ---
+**Nome** | agendarConsulta
+**Ator** | Secretaria
+**Descrição** | A secretaria agenda uma consulta vinculando médico, paciente, data e horário.
+**Pré-condições** | A secretaria está autenticada; médico e paciente existem no sistema.
+**Pós-condições** | A consulta é salva com status "Agendada".
+**Fluxo Principal** | 1. A secretaria seleciona o médico, o paciente, a data e o horário. 2. O sistema verifica conflito de horário para o médico. 3. Não havendo conflito, a consulta é criada e salva. 4. O sistema confirma o agendamento.
+**Alternativas** | 2a. Se houver conflito de horário, o sistema informa e solicita novo horário.
 
 ---
 
 #### Cancelar Consulta
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | cancelarConsulta |
-| **Ator** | Secretaria |
-| **Descrição** | A secretaria cancela uma consulta previamente agendada. |
-| **Pré-condições** | A consulta existe e está com status "Agendada". |
-| **Pós-condições** | O status da consulta é alterado para "Cancelada" e o horário fica disponível. |
-| **Fluxo Principal** | 1. A secretaria localiza a consulta. 2. Confirma o cancelamento. 3. O sistema atualiza o status para "Cancelada". 4. O sistema confirma a operação. |
-| **Alternativas** | 1a. Se a consulta não for encontrada, o sistema informa o erro. |
+Campo | Descrição
+--- | ---
+**Nome** | cancelarConsulta
+**Ator** | Secretaria
+**Descrição** | A secretaria cancela uma consulta previamente agendada.
+**Pré-condições** | A consulta existe e está com status "Agendada".
+**Pós-condições** | O status da consulta é alterado para "Cancelada" e o horário fica disponível.
+**Fluxo Principal** | 1. A secretaria localiza a consulta. 2. Confirma o cancelamento. 3. O sistema atualiza o status para "Cancelada". 4. O sistema confirma a operação.
+**Alternativas** | 1a. Se a consulta não for encontrada, o sistema informa o erro.
 
 ---
 
 #### Acessar Prontuário
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | acessarProntuario |
-| **Ator** | Médico |
-| **Descrição** | O médico consulta o prontuário eletrônico de um paciente, incluindo histórico de atendimentos. |
-| **Pré-condições** | O médico está autenticado; o paciente possui prontuário cadastrado. |
-| **Pós-condições** | O prontuário e o histórico de atendimentos são exibidos. |
-| **Fluxo Principal** | 1. O médico busca o paciente por nome ou CPF. 2. O sistema carrega o prontuário vinculado. 3. O histórico de atendimentos (`ProntuarioMedico`) é exibido em ordem cronológica. |
-| **Alternativas** | 1a. Se o paciente não for encontrado, o sistema informa que não há registro. |
+Campo | Descrição
+--- | ---
+**Nome** | acessarProntuario
+**Ator** | Médico
+**Descrição** | O médico consulta o prontuário eletrônico de um paciente, incluindo histórico de atendimentos.
+**Pré-condições** | O médico está autenticado; o paciente possui prontuário cadastrado.
+**Pós-condições** | O prontuário e o histórico de atendimentos são exibidos.
+**Fluxo Principal** | 1. O médico busca o paciente por nome ou CPF. 2. O sistema carrega o prontuário vinculado. 3. O histórico de atendimentos (`ProntuarioMedico`) é exibido em ordem cronológica.
+**Alternativas** | 1a. Se o paciente não for encontrado, o sistema informa que não há registro.
 
 ---
 
 #### Registrar Atendimento
 
-| Campo | Descrição |
-|---|---|
-| **Nome** | registrarAtendimento |
-| **Ator** | Médico |
-| **Descrição** | Após a consulta, o médico registra anotações clínicas no prontuário do paciente. |
-| **Pré-condições** | O médico está autenticado e acessou o prontuário do paciente. |
-| **Pós-condições** | Um novo registro de `ProntuarioMedico` é adicionado ao histórico do paciente. |
-| **Fluxo Principal** | 1. O médico acessa o prontuário do paciente. 2. Insere as anotações do atendimento. 3. O sistema cria um `ProntuarioMedico` com data, médico e anotações. 4. O sistema confirma o registro. |
-| **Alternativas** | 2a. Se o campo de anotações estiver vazio, o sistema solicita preenchimento antes de salvar. |
+Campo | Descrição
+--- | ---
+**Nome** | registrarAtendimento
+**Ator** | Médico
+**Descrição** | Após a consulta, o médico registra anotações clínicas no prontuário do paciente.
+**Pré-condições** | O médico está autenticado e acessou o prontuário do paciente.
+**Pós-condições** | Um novo registro de `ProntuarioMedico` é adicionado ao histórico do paciente.
+**Fluxo Principal** | 1. O médico acessa o prontuário do paciente. 2. Insere as anotações do atendimento. 3. O sistema cria um `ProntuarioMedico` com data, médico e anotações. 4. O sistema confirma o registro.
+**Alternativas** | 2a. Se o campo de anotações estiver vazio, o sistema solicita preenchimento antes de salvar.
 
 ---
 
@@ -510,8 +208,9 @@ Para garantir que o sistema seja modular, escalável e de fácil manutenção, f
 
 - Java 17 ou superior
 - Maven 3.8+
-- SQLite (gerenciado automaticamente pelo ORMLite)
-- VS Code (recomendado) com extensão **Extension Pack for Java**, ou IntelliJ IDEA
+- VS Code com a extensão **Extension Pack for Java**, ou IntelliJ IDEA
+
+> O banco de dados SQLite é gerenciado automaticamente pelo ORMLite — não é necessário instalar nada separado.
 
 ### Passos
 
@@ -531,11 +230,11 @@ mvn install
 mvn exec:java
 ```
 
-Ou, se preferir pelo VS Code: abra a pasta do projeto, localize a classe `Main.java` em `src/main/java/com/poo/` e clique em **Run**.
+Ou, se preferir pelo VS Code: abra a pasta do projeto, localize `Main.java` em `src/main/java/com/poo/` e clique em **Run**.
 
 ### Observações
 
-- O banco de dados `hospital.db` é criado automaticamente na primeira execução na raiz do projeto.
+- O banco de dados `hospital.db` é criado automaticamente na primeira execução, na raiz do projeto.
 - As tabelas são geradas pelo ORMLite com base nas anotações `@DatabaseTable` e `@DatabaseField` das classes de modelo.
 - Para reiniciar o banco do zero, basta deletar o arquivo `hospital.db` e executar novamente.
 
@@ -574,11 +273,11 @@ g8/
 
 ## Tecnologias Utilizadas
 
-| Tecnologia | Finalidade |
-|---|---|
-| Java 17 | Linguagem principal |
-| JavaFX | Interface gráfica |
-| SQLite | Banco de dados local |
-| ORMLite | Mapeamento objeto-relacional |
-| Maven | Gerenciamento de dependências |
-| VS Code / BlueJ | IDEs utilizadas no desenvolvimento |
+Tecnologia | Finalidade
+--- | ---
+Java 17 | Linguagem principal
+JavaFX | Interface gráfica
+SQLite | Banco de dados local
+ORMLite | Mapeamento objeto-relacional
+Maven | Gerenciamento de dependências
+VS Code / BlueJ | IDEs utilizadas no desenvolvimento
